@@ -1,0 +1,28 @@
+@font-face {
+    font-family: Inter;
+    src: url(../assets/Inter-VariableFont_slnt\,wght.ttf);
+}
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+height: 100vh; 
+font-family: Inter;
+
+}
+
+.main-area {
+    flex: 1;
+    padding: 20px;
+    background-color: #F0EDF6;
+    position: relative; /* Garantir que os elementos dentro tenham posição relativa ao main-area */
+    display: flex;
+    justify-content: center; /* Centralizar conteúdo horizontalmente */
+    align-items: center; /* Centralizar conteúdo verticalmente */
+    height: calc(100vh - 60px); /* Ajustar altura para ocupar a tela inteira menos a altura da barra superior */
+    width: 100%; /* Garantir que ocupe toda a largura disponível */
+}

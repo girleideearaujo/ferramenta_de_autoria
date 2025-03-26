@@ -1,0 +1,130 @@
+/* Estilos para o modal */
+.modal {
+    display: none; /* Ocultar inicialmente */
+    position: fixed;
+    z-index: 3; /* Garantir que o modal esteja acima de todos */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Centralizar horizontalmente e verticalmente */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4); /* Fundo escuro semi-transparente */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    overflow-y: auto;
+    flex: 1;
+    color: #331651;
+}
+
+.modal-content img {
+    width: 50px;
+    height: 50px;
+}
+
+.modal-column {
+    margin-bottom: 10px;
+}
+
+.modal-column  input{
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: none;
+    border-bottom: 5px solid #3d126b;
+}
+
+.modal-column  select{
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #AAA0B6;
+}
+
+.modal button{
+    background-color: #2ecc71;
+    color:#F0EDF6;
+    box-shadow: 0 0 10px rgba(9, 9, 9, 0.25);
+    border-radius: 5px;
+}
+
+#close-button, #search-close-button{
+    background-color: crimson;
+}
+.line {
+    position: absolute;
+    height: 2px;
+    background-color: #60269E;
+    pointer-events: none;
+    z-index: 1; /* Garantir que as linhas estejam atrás dos elementos arrastáveis */
+}
+
+#export-modal .modal-content img {
+    background-color: #FFBC35;
+    border-radius: 100%;
+}
+
+#export-modal .modal-content h2 {
+    color: #4f0579;
+    font-size: large;
+}
+
+#result-title {
+    color: #4f0579;
+}
+
+#close-result-modal {
+    background-color: #FFBC35;
+    color: #4f0579;
+    box-shadow: 0 0 10px rgba(9, 9, 9, 0.25);
+    border-radius: 5px;
+}
+
+.modal-content img{
+    background-color: #FFBC35;
+    border-radius: 100%;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.export-button {
+    padding: 10px 20px;
+    background-color: #FFBC35;
+    color: #4f0579;
+    box-shadow: 10px 10px 10px rgba(10, 0, 0, 0.1);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    
+}
+
+.export-button:hover {
+    background-color: #2980b9;
+}
+
+#edit-modal .modal-content{
+    width: 30%;
+}
+
+.modal-column button{
+    background-color: #2ecc71;
+    color: #F0EDF6;
+    box-shadow:  0 10px rgba(9, 9, 9, 0.25);
+    border-radius: 5px;
+}
+*:focus {
+    outline: none;
+}

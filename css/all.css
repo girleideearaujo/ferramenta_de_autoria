@@ -1,0 +1,50 @@
+@import url("conf.css");
+@import url("top-bar.css");
+@import url("fixed-side-bar.css");
+@import url("modals.css");
+
+a{
+    color: #c48dff;
+}
+
+#openPopupBtn {
+
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.popup {
+    position: relative;
+    max-width: 80%;
+    /* Adjust the width of the popup as needed */
+    max-height: 80vh;
+    /* Adjust the height of the popup as needed */
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    overflow-y: auto;
+    flex: 1;
+}
+
+#main-area {
+    background: white;
+    background-image: radial-gradient(rgb(172, 172, 172) 1px, transparent 0);
+    background-size: 40px 40px;
+    background-position: -19px -19px;
+}

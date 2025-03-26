@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramenta de Autoria</title>
+    <link rel="stylesheet" href="css/all.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <div class="margin">
+            <!-- <div id="logo">
+                <img src="assets/logo-removebg-preview.png" alt="imagem de logo">
+            </div> -->
+        </div>
+        <input type="text" name="" id="nome-arquivo" placeholder="Project name">
+        <button class="retangular-button" id="organize-buton"><span class="material-icons">model_training</span>Organize
+        </button>
+        <br>
+        <button class="retangular-button" id="export-button"><span class="material-icons">ios_share</span>Export
+        </button>
+      </header>
+    <div class="fixed-sidebar">
+        <!-- <div class="column">
+            <h2>Elements</h2>
+            <div id="draggable-template-margin" class="draggable-template-margin">
+                <div id="draggable-template" class="draggable-template">
+                    <span class="material-icons">add</span>
+                </div>
+            </div>
+
+        </div> -->
+        <div class="column">
+            <br>
+            <button class="round-button" id="info-template"><a href="https://drive.google.com/file/d/13ThVVaTBWX_g4IewWWbNReNp7_ebS5uQ/view?usp=sharing"><span class="material-icons">information</span></a> </button>
+            <br>
+            <button class="round-button" id="draggable-template"><span class="material-icons">add</span></button>
+            <br>
+            <button class="round-button" id="delete-button"><span class="material-icons">delete</span></button>
+            <br>
+            <button class="round-button" id="search-button"><span class="material-icons">search</span></button> 
+            <br>
+            
+        </div>
+    </div>
+
+    <!-- Modal para edição -->
+    <div id="edit-modal" class="modal"> <!--tela pop-up-->
+        <div class="modal-content">
+            <!-- <img src="assets/logo-removebg-preview.png" alt="imagem de logo"> -->
+
+            <form id="edit-form">
+                <div class="modal-column">
+                    <label for="title">Unit Title:</label>
+                    <br>
+                    <input type="text" id="title" name="title">
+                </div>
+                <div>
+                    <button type="submit" class="save-button" id="save-button"><span class="material-icons">check</span></button>
+                    <button type="submit" class="close" id="close-button"><span class="material-icons">close</span></button>
+        </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="organize-modal" class="modal"> <!--tela pop-up-->
+        <div class="modal-content">
+ 
+                <div class="modal-column">
+                    <label for="title">Select:</label>
+                    <br>
+                    <select name="" id="select-layout">
+                        <option value="cose">cose</option>
+                        <option value="breadthfirst">breadthfirst</option>
+                        <option value="concentric">concentric</option>
+                        <option value="circle">circle</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="organize-buton" id="save-button-organize"><span class="material-icons">check</span></button>
+                    <button type="submit" class="close" id="close-button"><span class="material-icons">close</span></button>
+        </div>
+           
+        </div>
+    </div>
+    <div id="search-modal" class="modal"> <!--tela pop-up-->
+        <div class="modal-content">
+
+                <div class="modal-column">
+                    <br>
+                    <form id="edit-form">
+                        <div class="modal-column">
+                            <label for="title">Node Id:</label>
+                            <br>
+                            <input type="text" id="searchId" name="title">
+                        </div>
+                        <div>
+                            <button type="submit" class="save-button" id="save-button-search"><span class="material-icons">check</span></button>
+                            <button type="button" class="close" id="search-close-button"><span class="material-icons">close</span></button>
+                        </div>
+                 
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Novo modal para exportar modelo -->
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <!-- <img src="assets/logo-removebg-preview.png" alt="imagem de logo"> -->
+
+            <h2>Save:</h2>
+            <!-- <button class="close-button" id="close-result-modal">Close</button> -->
+
+            <div class="button-column">
+                
+                <button class="export-button" id="export-json">JSON</button>
+                <button class="export-button" id="export-sql">SQL</button>
+                <button class="export-button" id="export-png">PNG</button>
+                <button class="export-button" id="export-jpg">JPG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo modal para resultado da exportação -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <!-- <img src="assets/logo-removebg-preview.png" alt="imagem de logo"> -->
+            <h2 id="result-title"></h2>
+            <p id="result-message"></p>
+            <button class="close-button" id="close-result-modal">Close</button>
+        </div>
+    </div>
+
+    <div id="espaco"></div>
+    <div class="main-area" id="main-area">
+        <div class="cy"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js"></script>
+    <script src="js/all.js" type="module"></script>
+</body>
+
+</html>
