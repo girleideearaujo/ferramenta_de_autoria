@@ -7,6 +7,8 @@
     <title>Ferramenta de Autoria</title>
     <link rel="stylesheet" href="css/all.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+
 </head>
 
 <body>
@@ -21,7 +23,9 @@
         <button class="retangular-button" id="organize-buton"><span class="material-icons">model_training</span>Organize
         </button>
         <br>
-        <button class="retangular-button" id="export-button"><span class="material-icons">ios_share</span>Export
+        <button class="retangular-button" id="export-button"><span class="material-icons">upload</span>Export
+        </button>
+        <button class="retangular-button" id="import-button"><span class="material-icons">download</span>Import
         </button>
       </header>
     <div class="fixed-sidebar">
@@ -118,10 +122,34 @@
 
             <div class="button-column">
                 
-                <button class="export-button" id="export-json">JSON</button>
-                <button class="export-button" id="export-sql">SQL</button>
-                <button class="export-button" id="export-png">PNG</button>
-                <button class="export-button" id="export-jpg">JPG</button>
+                <button class="export-button" id="export-json"><span class="material-symbols-outlined">
+file_json
+</span>JSON</button>
+                <button class="export-button" id="export-sql"><span class="material-symbols-outlined">
+database
+</span>SQL</button>
+                <button class="export-button" id="export-png"><span class="material-symbols-outlined">
+image
+</span>PNG</button>
+                <button class="export-button" id="export-jpg"><span class="material-symbols-outlined">
+image
+</span>JPG</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <!-- <img src="assets/logo-removebg-preview.png" alt="imagem de logo"> -->
+
+            <h2>Select your file:</Select>:</h2>
+            <!-- <button class="close-button" id="close-result-modal">Close</button> -->
+
+            <div class="button-column">
+                
+                <button class="export-button"><span class="material-symbols-outlined">
+file_json
+<input type="file" id="fileInput">
             </div>
         </div>
     </div>
@@ -138,11 +166,14 @@
 
     <div id="espaco"></div>
     <div class="main-area" id="main-area">
+        <div id="viz"></div>
         <div class="cy"></div>
     </div>
-
+    <script src="https://unpkg.com/neovis.js@2.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/neo4j-driver@5.12.0/lib/browser/neo4j-web.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js"></script>
     <script src="js/all.js" type="module"></script>
+    <!-- <script src="js/neovis_ferramenta.js"></script> -->
 </body>
 
 </html>

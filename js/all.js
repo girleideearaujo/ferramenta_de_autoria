@@ -1,3 +1,9 @@
+// config
+const driver = neo4j.driver(
+            "neo4j+s://5bea784e.databases.neo4j.io",
+            neo4j.auth.basic("neo4j", "oLjfQN8HX9inMsXygoMAunUuuDWV5odAOuhlGAWmRgo") 
+        );
+
 var cy = cytoscape({
     container: document.getElementById('main-area'),
     elements: [],
@@ -34,6 +40,7 @@ var cy = cytoscape({
     }
 });
 
+
 function getChildren(cy, nodeId) {
     var children = cy.edges().filter(function (edge) {
       return edge.data('source') === nodeId; 
@@ -49,7 +56,7 @@ var nodes = cy.nodes()
 function animateNodes(cy) {
     const nodesData = new Map();
   
-    // Inicializar dados para cada nó existente
+    
     cy.nodes().forEach(node => {
       const pos = node.position();
       nodesData.set(node.id(), {
@@ -62,7 +69,7 @@ function animateNodes(cy) {
       });
     });
   
-    // Detectar movimento manual para atualizar a posição base
+    
     cy.nodes().on('dragfree', (event) => {
       const node = event.target;
       const pos = node.position();
@@ -110,14 +117,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const organizeButton = document.getElementById('organize-buton')
     const editModal = document.getElementById('edit-modal');
     const exportModal = document.getElementById('export-modal');
+    const importModal = document.getElementById('import-modal');
     const searchModal = document.getElementById('search-modal');
     const resultModal = document.getElementById('result-modal');
     const closeModalButtons = document.querySelectorAll('.modal .close');
     const editForm = document.getElementById('edit-form');
     const titleInput = document.getElementById('title');
+    const fileInput = document.getElementById('fileInput');
     const parentSelect = document.getElementById('parent');
     const parentListUl = document.getElementById('parent-list-ul');
     const exportButton = document.getElementById('export-button');
+    const importButton = document.getElementById('import-button');
     const exportButtons = document.querySelectorAll('.export-button');
     const closeResultModalButton = document.getElementById('close-result-modal');
     const resultTitle = document.getElementById('result-title');
@@ -137,9 +147,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     var color = ['#DAF7A6', '#FFC300', '#FF5733', '#C70039', '#73008b', '#900C3F', '#4a235a', '#2e00d0', '#1700e7', '#0000ff']
 
+
+    async function addNodeDB(id) {
+        const session = driver.session();
+  try {
+         await session.run(
+        `CREATE (t:Topic {id: "${id}"})`,
+        { id: id});
+         } finally {
+    await session.close();
+  }
+    }
+    async function addEdgeDB(source, target) {
+        const session = driver.session();
+  try {
+         await session.run(
+  `MATCH (a:Topic {id: "${source}"}), (b:Topic {id:"${target}"}) ` +
+  `CREATE (a)-[:PREREQUISITE]->(b)`
+);
+ } finally {
+    await session.close();
+  }
+
+}    
+
     function addNode() {
-        console.log('Aaaaaa');
-        
+        console.log('Aaaaaa'); 
         var id = titleInput.value
         var centerPosition = {
             x: cy.width() / 2,
@@ -150,12 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
             data: { id: id },
             position: centerPosition
         });
-        listOfIds.push(id)
-        titleInput.value = ''
 
+        listOfIds.push(id)
+        addNodeDB(id)
+   
+    titleInput.value = ''
     }
 
-    function handleNodeClick(evt) {
+ function handleNodeClick(evt) {
         var node = evt.target;
 
         if (firstNode === null) {
@@ -168,8 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 group: 'edges',
                 data: { id: 'e' + firstNode.data('id') + '-' + node.data('id'), source: firstNode.data('id'), target: node.data('id') }
             });
-
-
+            addEdgeDB(firstNode.data('id'), node.data('id'))
+        
+    
             firstNode.unselect();
             firstNode = null;
 
@@ -187,14 +223,52 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-
+        
     }
+  async function loadDB() {
+    const session = driver.session()
+    const nodes = await session.run("MATCH (n) RETURN n");
+    const edges = await session.run("MATCH (n)-[r]->(m) RETURN n, r, m");
+    nodes.records.forEach(record => {
+      console.log();
+      var id = record.get("n").properties.id
+       var centerPosition = {
+            x: cy.width() / 2,
+            y: cy.height() / 2
+        };
+        cy.add({
+            group: 'nodes',
+            data: { id: id },
+            position: centerPosition
+        });
+        listOfIds.push(id)
+    });
+    edges.records.forEach(record => {
+        cy.add({
+            group: 'edges',
+            data: { id: 'e' + record.get("n").properties.id + '-' + record.get("m").properties.id, source: record.get("n").properties.id, target: record.get("m").properties.id }
+        });
+    })
+ 
+  animateNodes(cy);
+}
 
-    function deleteSelectedElements() {
+    async function deleteSelectedElements() {
         var selectedElements = cy.$(':selected');
         if (selectedElements.length > 0) {
+            var id = selectedElements[0].id()
             selectedElements.remove();
             firstNode = null;
+            
+            const session = driver.session()
+            try {
+            await session.run(
+                "MATCH (t:Topic {id: $id}) DETACH DELETE t",
+                 { id }
+            );
+        } finally {
+            await session.close();
+        }
         } else {
             alert('No nodes selected to delete.');
         }
@@ -337,27 +411,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     console.log('');
 
-    deleteButton.addEventListener('click', () => {
-        if (selectedElement) {
-            elements.forEach(el => {
-                if (el.lines) {
-                    el.lines = el.lines.filter(lineInfo => lineInfo.parent !== selectedElement);
-                    updateLines();
-                }
-            });
-            if (selectedElement.lines) {
-                selectedElement.lines.forEach(lineInfo => {
-                    lineInfo.line.remove();
-                });
-            }
-            elements = elements.filter(el => el !== selectedElement);
-            selectedElement.remove();
-            selectedElement = null;
-            updateParentSelect();
-            updateLines();
-            updateSelectedItems(); // Atualiza os itens selecionados ao deletar
-        }
-    });
+    // deleteButton.addEventListener('click', async () => {
+    //     if (selectedElement) {
+    //         elements.forEach(el => {
+    //             if (el.lines) {
+    //                 el.lines = el.lines.filter(lineInfo => lineInfo.parent !== selectedElement);
+    //                 updateLines();
+    //             }
+    //         });
+    //         if (selectedElement.lines) {
+    //             selectedElement.lines.forEach(lineInfo => {
+    //                 lineInfo.line.remove();
+    //             });
+    //         }
+    //         elements = elements.filter(el => el !== selectedElement);
+    //         selectedElement.remove();
+    //         selectedElement = null;
+    //         updateParentSelect();
+    //         updateLines();
+    //         updateSelectedItems(); // Atualiza os itens selecionados ao deletar
+    //     }
+        
+    // });
 
 
 
@@ -365,6 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             editModal.style.display = 'none';
             exportModal.style.display = 'none';
+            importModal.style.display = 'none';
             resultModal.style.display = 'none';
         });
     });
@@ -381,10 +457,48 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === exportModal) {
             exportModal.style.display = 'none';
         }
+        if (event.target === importModal) {
+            importModal.style.display = 'none';
+            importGraph()
+        }
         if (event.target === resultModal) {
             resultModal.style.display = 'none';
         }
     };
+    function importGraph() {
+        var file = fileInput.files[0]
+        console.log(file);
+        if (file) {
+        const reader = new FileReader();
+        if (file.length > 0) {
+        importModal.style.display = 'none';
+        console.log('Arquivo carregado:', fileInput.files[0].name);
+        }
+        reader.onload = function(e) {
+            try {
+                var jsonContent = JSON.parse(e.target.result);
+
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                alert("Invalid JSON file.");
+            }
+           
+         for (const element of jsonContent.elements) {
+            if (element.group === "nodes") {
+                addNodeDB(element.data.id)
+            } else {
+                addEdgeDB(element.data.source, element.data.target)
+            }
+            
+        }
+
+        };
+        loadDB()
+        reader.readAsText(file); 
+        
+        
+    }
+    }
 
     // parentSelect.addEventListener('change', () => {
     //     if (selectedElement && parentSelect.selectedOptions.length > 0) {
@@ -470,6 +584,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportButton.addEventListener('click', () => {
         exportModal.style.display = 'flex';
+    });
+    importButton.addEventListener('click', () => {
+        importModal.style.display = 'flex';
     });
 
     exportButtons.forEach(button => {
@@ -591,7 +708,24 @@ document.addEventListener('DOMContentLoaded', () => {
             fixedSidebar.classList.toggle('visible');
         });
     });
+async function limparBanco() {
+  const session = driver.session();
+  try {
+    await session.run("MATCH (n) DETACH DELETE n");
+    console.log("Banco limpo com sucesso!");
+  } catch (err) {
+    console.error("Erro ao limpar banco:", err);
+  } finally {
+    await session.close();
+  }
+}
 
+
+
+    window.onload = () => {
+    //   loadDB();
+      limparBanco();
+    };
 });
 
 
